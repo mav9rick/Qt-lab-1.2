@@ -17,17 +17,19 @@ File::File()// Конструктор по умолчанию
         exist = false;
         size = 0;
         path = nullptr;
-        abort();
     }
+    else
+    {
     QTextStream out(&file);
     out << "This is a test file created by constructor." << "\n";
     file.close();
     exist = true;
     size = file.size();
     path = directoryPath;
-    cout << "File created successfully." << "\n";
-    cout << "Size of file = " << size << "\n";
-    cout << "Path to file = " << path << "\n";
+    cout << "File created successfully. (const())" << "\n";
+    //cout << "Size of file = " << size << "\n";
+    //cout << "Path to file = " << path << "\n";
+    }
 }
 File::File(QString path1) // Конструктор принимающий адрес где создать файл
 {
@@ -39,17 +41,19 @@ File::File(QString path1) // Конструктор принимающий ад�
         exist = false;
         size = 0;
         path = nullptr;
-        abort();
     }
+    else
+    {
     QTextStream out(&file);
     out << "This is a test file created by constructor." << "\n";
     file.close();
     exist = true;
     size = file.size();
     path = path1;
-    cout << "File created successfully." << "\n";
-    cout << "Size of file = " << size << "\n";
-    cout << "Path to file = " << path1 << "\n";
+    cout << "File created successfully.(const(path))" << "\n";
+    //cout << "Size of file = " << size << "\n";
+    //cout << "Path to file = " << path1 << "\n";
+    }
 }
 int File::create() // Метод создания файла
 {
@@ -110,7 +114,7 @@ bool File::getexist()
 {
     return exist;
 }
-int File::change()
+void File::change()
 {
     QTextStream cout(stdout);
     QTextStream in(stdin);
@@ -120,8 +124,9 @@ int File::change()
     if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
     {
         cout << "Failed to open file for reading and writing.";
-        return 1;
     }
+    else
+    {
     QTextStream out2(&file);
     cout << "Enter content of file:";
     cout.flush();
@@ -131,5 +136,5 @@ int File::change()
     cout << "~New content added to the file.~";
     file.close();
     cout << "File has been changed successfully." << "\n";
-    return 0;
+    }
 }

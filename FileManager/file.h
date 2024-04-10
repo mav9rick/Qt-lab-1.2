@@ -12,7 +12,7 @@ public:
     File(QString path);
     int create();
     void del(QFileInfo filepath);
-    int change();
+    void change();
     QString getpath();
     int getsize();
     bool getexist();
