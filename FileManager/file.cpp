@@ -11,6 +11,7 @@ File::File()// Конструктор по умолчанию
     QTextStream cout(stdout);
     QFile file("test.txt");
     QString directoryPath = QDir::currentPath();
+    cout << "Dir path == " << directoryPath << "\n";
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         cout << "Failed to open file for writing." << "\n";
@@ -25,7 +26,7 @@ File::File()// Конструктор по умолчанию
     file.close();
     exist = true;
     size = file.size();
-    path = directoryPath;
+    path = directoryPath + "/test.txt";
     cout << "File created successfully. (const())" << "\n";
     //cout << "Size of file = " << size << "\n";
     //cout << "Path to file = " << path << "\n";
@@ -49,7 +50,7 @@ File::File(QString path1) // Конструктор принимающий ад�
     file.close();
     exist = true;
     size = file.size();
-    path = path1;
+    path = path1 + "/test.txt";
     cout << "File created successfully.(const(path))" << "\n";
     //cout << "Size of file = " << size << "\n";
     //cout << "Path to file = " << path1 << "\n";
@@ -121,7 +122,7 @@ void File::change()
     QString filePath = getpath();
     QString userInput;
     QFile file(filePath);
-    if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
+    if (!file.open(QIODevice::Append | QIODevice::Text))
     {
         cout << "Failed to open file for reading and writing.";
     }
@@ -133,8 +134,10 @@ void File::change()
     in >> userInput;
     out2 << userInput;
     out2 << "\n";
-    cout << "~New content added to the file.~";
+    cout << "~New content added to the file.~" << "\n";
+    cout << "\n";
     file.close();
     cout << "File has been changed successfully." << "\n";
+    cout << "\n";
     }
 }
