@@ -16,13 +16,15 @@ public:
     void getpath();
     void existfile();
     void sizefile();
-    void runcommand();
+    void runcommand(const QString &command);
     int exit();
+    QString getstring();
+    void setstring();
 protected:
 
 private:
     QString command;
-    std::map<string, void(*)()> commands;
+    std::map<QString, void(logger::*)()> commands;
 
 };
 
