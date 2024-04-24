@@ -5,22 +5,24 @@
 #include <QDebug>
 #include <QFileInfo>
 
-class File:public QFile
+class File:public QObject
 {
+    //Q_OBJECT
 public:
     File();
     File(QString path);
     int create();
-    void del(QFileInfo filepath);
-    void change();
+    int del();
+    int change();
     QString getpath();
+    QString setpath();
     int getsize();
     bool getexist();
+    void testmethod();
 protected:
     bool exist;
     int size;
     QString path;
 private:
-
 };
 #endif // FILE_H
