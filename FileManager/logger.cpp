@@ -7,13 +7,18 @@ using namespace std;
 logger::logger()
 {
     commands["/help"] = &logger::displayhelp;
-    //commands["/exit"] = &logger::exit;
     commands["/createfile"] = &logger::createfile;
     commands["/deletefile"] = &logger::deletefile;
     commands["/changefile"] = &logger::changefile;
-    commands["/getpath"] = &logger::getpath;
+    commands["/getpath"] = &logger::getfilepath;
     commands["/existfile"] = &logger::existfile;
     commands["/sizefile"] = &logger::sizefile;
+    QObject::connect(this, &logger::createS,this, &logger::createSL);
+    QObject::connect(this, &logger::deleteS,this, &logger::delSL);
+    QObject::connect(this, &logger::changeS,this, &logger::changeSL);
+    QObject::connect(this, &logger::getpathS,this, &logger::getpathSL);
+    QObject::connect(this, &logger::getsizeS,this, &logger::getsizeSL);
+    QObject::connect(this, &logger::getexistS,this, &logger::getexistSL);
 }
 void logger::displayhelp()
 {
@@ -23,38 +28,40 @@ void logger::displayhelp()
     cout << "/createfile - создать файл" <<  endl;
     cout << "/deletefile - удалить файл" <<  endl;
     cout << "/changefile - изменить файл" <<  endl;
-    cout << "/getpath- вернуть путь к файлу" <<  endl;
+    cout << "/getpath - вернуть путь к файлу" <<  endl;
     cout << "/existfile - проверить существование файла" <<  endl;
     cout << "/sizefile - узнать размер файла" <<  endl;
+
 }
-//int logger::exit()
-//{
-//cout << "Завершение программы" << endl;
-//return -1;
-//}
 void logger::createfile()
 {
     cout << "createfile" << endl;
+    emit createS();
 }
 void logger::deletefile()
 {
     cout << "deletefile" << endl;
+    emit deleteS();
 }
-void logger::getpath()
+void logger::getfilepath()
 {
     cout << "getpath" << endl;
+    emit getpathS();
 }
 void logger::changefile()
 {
     cout << "changefile" << endl;
+    emit changeS();
 }
 void logger::existfile()
 {
     cout << "existfile" << endl;
+    emit getexistS();
 }
 void logger::sizefile()
 {
     cout << "existfile" << endl;
+    emit getsizeS();
 }
 void logger::runcommand(const QString &command)
 {
@@ -72,8 +79,37 @@ QString logger::getstring()
 {
     cout << "Введите команду : " ;
     QTextStream qin(stdin);
-    QTextStream qout(stdout);
     QString input;
     qin >> input;
     return input;
+}
+void logger::createSL()
+{
+    cout << "~Метод создания файла~" << endl;
+    file.create();
+}
+void logger::delSL()
+{
+    cout << "~Метод удаления файла~" << endl;
+    file.del();
+}
+void logger::changeSL()
+{
+    cout << "~Метод удаления файла~" << endl;
+    file.change();
+}
+void logger::getpathSL()
+{
+    cout << "~Метод удаления файла~" << endl;
+    file.getpath();
+}
+void logger::getexistSL()
+{
+    cout << "~Метод удаления файла~" << endl;
+    file.getexist();
+}
+void logger::getsizeSL()
+{
+    cout << "~Метод удаления файла~" << endl;
+    file.getsize();
 }
