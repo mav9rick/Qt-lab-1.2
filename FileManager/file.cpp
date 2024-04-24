@@ -95,7 +95,7 @@ int File::create() // Метод создания файла
         return 0;
     }
     cout << "Введите содержание файла : ";
-    in >> userInput;
+    userInput = in.readLine();
     out2 << userInput;
     out2 << "\n";
     out2 << "This is a test file created using Qt.";
@@ -137,25 +137,25 @@ bool File::getexist()
 }
 int File::change()
 {
-    QTextStream cout(stdout);
     QTextStream in(stdin);
     QString filePath = getpath();
-    QString userInput;
+    if (!QFileInfo::exists(filePath))
+    {
+        cout << "Файл не найден." << endl;
+        return 1;
+    }
     QFile file(filePath);
     if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
     {
-        cout << "Failed to open file for reading and writing.";
+        cout << "Ошибка открытия файла для чтения и записи." << endl;
         return 1;
     }
-    QTextStream out2(&file);
-    cout << "Enter content of file:";
-    cout.flush();
-    in >> userInput;
-    out2 << userInput;
-    out2 << "\n";
-    cout << "~New content added to the file.~";
+    cout << "Введите содержимое файла : ";
+    QString userInput = in.readLine();
+    QTextStream out(&file);
+    out << userInput << "\n";
     file.close();
-    cout << "File has been changed successfully." << "\n";
+    cout << "Файл был успешно изменён." << endl;
     return 0;
 }
 void File::testmethod()
