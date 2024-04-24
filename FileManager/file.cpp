@@ -7,6 +7,16 @@
 #include <QDir>
 #include <iostream>
 using namespace std;
+const QString defpath = QDir::currentPath();
+QString File::getpath()
+{
+    return path;
+}
+QString File::setpath(QString newpath)
+{
+    path = newpath;
+    return path;
+}
 File::File()// Конструктор по умолчанию
 {
     QTextStream cout(stdout);
@@ -66,6 +76,12 @@ int File::create() // Метод создания файла
         QString newpath;
         in1 >> newpath;
         QDir::setCurrent(newpath);
+        setpath(newpath);
+    }
+    else
+    {
+        QDir::setCurrent(defpath);
+        setpath(defpath);
     }
     cout << "Введите название файла : ";
     QString userInput;
@@ -110,20 +126,7 @@ int File::del() // Метод для удаления файла
         return 0;
     }
 }
-QString File::getpath()
-{
-    return path;
-}
-QString File::setpath()
-{
-    QTextStream in(stdin);
-    QTextStream out(stdout);
-    out << "Введите путь к файлу: ";
-    QString input;
-    in >> input;
-    path = input;
-    return path;
-}
+
 int File::getsize()
 {
     return size;

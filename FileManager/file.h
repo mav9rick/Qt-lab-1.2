@@ -15,7 +15,7 @@ public:
     int del();
     int change();
     QString getpath();
-    QString setpath();
+    QString setpath(QString newpath);
     int getsize();
     bool getexist();
     void testmethod();
