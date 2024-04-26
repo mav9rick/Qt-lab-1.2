@@ -1,4 +1,6 @@
 #include "file.h"
+#include "qcoreevent.h"
+#include "qwidget.h"
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
@@ -16,6 +18,24 @@ QString File::setpath(QString newpath)
 {
     path = newpath;
     return path;
+}
+int File::setsize(int newsize)
+{
+    size = newsize;
+    return size;
+}
+int File::getsize()
+{
+    return size;
+}
+bool File::setexist(bool newexist)
+{
+    exist = newexist;
+    return exist;
+}
+bool File::getexist()
+{
+    return exist;
 }
 File::File()// Конструктор по умолчанию
 {
@@ -102,6 +122,8 @@ int File::create() // Метод создания файла
     file.close();
     cout << "\n";
     cout << "Файл создан успешно." << endl;
+    //size = setsize();
+    //exist = setexist();
     //emit created();
     return 1;
 }
@@ -118,6 +140,8 @@ int File::del() // Метод для удаления файла
     if (file.remove())
     {
         cout << "Файл успешно удален." << endl;
+        //size = setsize();
+        //exist = setexist();
         return 1;
     }
     else
@@ -125,15 +149,6 @@ int File::del() // Метод для удаления файла
         cout << "Не удалось удалить файл." << endl;
         return 0;
     }
-}
-
-int File::getsize()
-{
-    return size;
-}
-bool File::getexist()
-{
-    return exist;
 }
 int File::change()
 {
@@ -156,10 +171,65 @@ int File::change()
     out << userInput << "\n";
     file.close();
     cout << "Файл был успешно изменён." << endl;
+    //size = setsize();
+    //exist = setexist();
+    //path = newpath();
     return 0;
 }
-void File::testmethod()
+void File::testmethod()// Метод для проверки работы сигналов и слотов
 {
     cout << "Testmethod classa File" << endl;
 }
+QString File::setfile() // Метод для выбора файла за которым необходимо установить контроль
+{
+    cout << "Введите путь к файлу за которым необходимо установить контроль : " ;
+    QTextStream out(stdout),in(stdin);
+    QString filepath;
+    in >> filepath;
+    QString a = setpath(filepath);
+    return a;
+}
+void File::showEvent(QShowEvent *)
+{
+    mytimer = QObject::startTimer(50);
+}
+void File::timerEvent(QTimerEvent *event)
+{
+    QString newpath = path;
+    bool newexist = exist;
+    int newsize = size;
+    int check = 0;
+    if (event->timerId() == mytimer)
+    {
+        size = getsize();
+        path = getpath();
+        exist = getexist();
+        if (newsize != size)
+        {
+            check = -1;
+            cout << "Файл был изменён";
+        }
+        if (newpath != path)
+        {
+            check = -2;
+            cout << "Файл был перемещён";
+        }
+        if (newexist != exist)
+        {
+            check = -3;
+            cout << "Файл был удалён";
+        }
+        else
+        {
+            check = 0;
+        }
+    }
+}
+
+
+
+
+
+
+
 
