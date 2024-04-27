@@ -15,10 +15,7 @@ logger::logger()
     commands["/sizefile"] = &logger::sizefile;
     QObject::connect(this, &logger::createS,this, &logger::createSL);
     QObject::connect(this, &logger::deleteS,this, &logger::delSL);
-    QObject::connect(this, &logger::changeS,this, &logger::changeSL);
     QObject::connect(this, &logger::getpathS,this, &logger::getpathSL);
-    QObject::connect(this, &logger::getsizeS,this, &logger::getsizeSL);
-    QObject::connect(this, &logger::getexistS,this, &logger::getexistSL);
 }
 void logger::displayhelp()
 {
@@ -28,7 +25,7 @@ void logger::displayhelp()
     cout << "/createfile - создать файл" <<  endl;
     cout << "/deletefile - удалить файл" <<  endl;
     cout << "/changefile - изменить файл" <<  endl;
-    cout << "/getpath - вернуть путь к файлу" <<  endl;
+    cout << "/getpath- вернуть путь к файлу" <<  endl;
     cout << "/existfile - проверить существование файла" <<  endl;
     cout << "/sizefile - узнать размер файла" <<  endl;
 
@@ -51,17 +48,17 @@ void logger::getfilepath()
 void logger::changefile()
 {
     cout << "changefile" << endl;
-    emit changeS();
+    //emit changeS();
 }
 void logger::existfile()
 {
     cout << "existfile" << endl;
-    emit getexistS();
+    //emit existS();
 }
 void logger::sizefile()
 {
     cout << "existfile" << endl;
-    emit getsizeS();
+    //emit sizeS();
 }
 void logger::runcommand(const QString &command)
 {
@@ -78,9 +75,9 @@ void logger::runcommand(const QString &command)
 QString logger::getstring()
 {
     cout << "Введите команду : " ;
-    QTextStream qin(stdin);
+    QTextStream in(stdin);
     QString input;
-    qin >> input;
+    in >> input;
     return input;
 }
 void logger::createSL()
@@ -93,23 +90,38 @@ void logger::delSL()
     cout << "~Метод удаления файла~" << endl;
     file.del();
 }
-void logger::changeSL()
-{
-    cout << "~Метод удаления файла~" << endl;
-    file.change();
-}
 void logger::getpathSL()
 {
-    cout << "~Метод удаления файла~" << endl;
-    file.getpath();
+    cout << "~Метод возвращения пути файла~" << endl;
+    QTextStream out(stdout);
+    QString path;
+    path = file.getpath();
+    out << "Путь к файлу : " << path << "\n";
 }
-void logger::getexistSL()
+void Timer::start()
 {
-    cout << "~Метод удаления файла~" << endl;
-    file.getexist();
+    tick = startTimer(500);
 }
-void logger::getsizeSL()
+void Timer::stop()
 {
-    cout << "~Метод удаления файла~" << endl;
-    file.getsize();
+    killTimer(tick);
 }
+void Timer::timerEvent(QTimerEvent *event)
+{
+    if (event->timerId() == tick)
+    {
+        emit check();
+    }
+    else
+        QCoreApplication::timerEvent(event);
+}
+
+
+
+
+
+
+
+
+
+

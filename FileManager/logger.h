@@ -20,10 +20,7 @@ public:
     void existfile();
     void sizefile();
     void runcommand(const QString &command);
-    int exit();
     QString getstring();
-protected:
-
 private:
     QString command;
     std::map<QString, void(logger::*)()> commands;
@@ -31,17 +28,34 @@ private:
 signals:
     void createS();
     void deleteS();
-    void changeS();
     void getpathS();
-    void getexistS();
-    void getsizeS();
 public slots:
     void createSL();
     void delSL();
-    void changeSL();
     void getpathSL();
-    void getexistSL();
-    void getsizeSL();
 };
+class Timer:public QCoreApplication
+{
+public:
+    Timer(int &argc, char **argv) : QCoreApplication(argc, argv), tick(0) {}
+protected:
+    void start();
+    void stop();
+    void timerEvent(QTimerEvent*);
+private:
+    int tick;
+signals:
+    void check();
+};
+
+
+
+
+
+
+
+
+
+
 
 #endif // LOGGER_H
