@@ -1,6 +1,4 @@
 #include "file.h"
-#include "qcoreevent.h"
-#include "qwidget.h"
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
@@ -8,10 +6,13 @@
 #include <QFileInfo>
 #include <QDir>
 #include <iostream>
+#include <QCoreApplication>
 using namespace std;
 const QString defpath = QDir::currentPath();
 QString File::getpath()
 {
+    QFileInfo fileinfo(path);
+    path = fileinfo.absoluteFilePath();
     return path;
 }
 QString File::setpath(QString newpath)
@@ -26,6 +27,8 @@ int File::setsize(int newsize)
 }
 int File::getsize()
 {
+    QFileInfo fileinfo(path);
+    size = fileinfo.size();
     return size;
 }
 bool File::setexist(bool newexist)
@@ -35,6 +38,8 @@ bool File::setexist(bool newexist)
 }
 bool File::getexist()
 {
+    QFileInfo fileinfo(path);
+    exist = fileinfo.exists();
     return exist;
 }
 File::File()// Конструктор по умолчанию
@@ -104,10 +109,10 @@ int File::create() // Метод создания файла
         setpath(defpath);
     }
     cout << "Введите название файла : ";
-    QString userInput;
-    QTextStream in(stdin);
-    in >> userInput;
-    QFile file(userInput + ".txt");
+    QString userInput,name;
+    QTextStream in(stdin),in2(stdin);
+    in2 >> name;
+    QFile file(name + ".txt");
     QTextStream out2(&file);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
@@ -116,14 +121,17 @@ int File::create() // Метод создания файла
     }
     cout << "Введите содержание файла : ";
     userInput = in.readLine();
-    out2 << userInput;
-    out2 << "\n";
+    out2 << userInput << "\n";
     out2 << "This is a test file created using Qt.";
     file.close();
     cout << "\n";
     cout << "Файл создан успешно." << endl;
-    //size = setsize();
-    //exist = setexist();
+    QFileInfo fileinfo(path + "/" + name + ".txt");
+    int newsize = fileinfo.size();
+    bool newexist = fileinfo.exists();
+    size = setsize(newsize);
+    exist = setexist(newexist);
+    cout << exist << endl;
     //emit created();
     return 1;
 }
@@ -140,8 +148,8 @@ int File::del() // Метод для удаления файла
     if (file.remove())
     {
         cout << "Файл успешно удален." << endl;
-        //size = setsize();
-        //exist = setexist();
+        size = setsize(0);
+        exist = setexist(false);
         return 1;
     }
     else
@@ -176,55 +184,17 @@ int File::change()
     //path = newpath();
     return 0;
 }
-void File::testmethod()// Метод для проверки работы сигналов и слотов
-{
-    cout << "Testmethod classa File" << endl;
-}
 QString File::setfile() // Метод для выбора файла за которым необходимо установить контроль
 {
     cout << "Введите путь к файлу за которым необходимо установить контроль : " ;
     QTextStream out(stdout),in(stdin);
     QString filepath;
     in >> filepath;
-    QString a = setpath(filepath);
-    return a;
+    QFileInfo fileinfo;
+    fileinfo.setFile(filepath);
+    return filepath;
 }
-void File::showEvent(QShowEvent *)
-{
-    mytimer = QObject::startTimer(50);
-}
-void File::timerEvent(QTimerEvent *event)
-{
-    QString newpath = path;
-    bool newexist = exist;
-    int newsize = size;
-    int check = 0;
-    if (event->timerId() == mytimer)
-    {
-        size = getsize();
-        path = getpath();
-        exist = getexist();
-        if (newsize != size)
-        {
-            check = -1;
-            cout << "Файл был изменён";
-        }
-        if (newpath != path)
-        {
-            check = -2;
-            cout << "Файл был перемещён";
-        }
-        if (newexist != exist)
-        {
-            check = -3;
-            cout << "Файл был удалён";
-        }
-        else
-        {
-            check = 0;
-        }
-    }
-}
+
 
 
 
