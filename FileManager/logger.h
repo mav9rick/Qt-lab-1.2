@@ -2,12 +2,14 @@
 #define LOGGER_H
 #include <map>
 #include <iostream>
+#include <QObject>
 #include <QString>
 #include <QFileInfo>
 #include <file.h>
+#include <timer.h>
 using namespace std;
 
-class logger:public QObject
+class logger:public File
 {
     Q_OBJECT
 public:
@@ -19,34 +21,29 @@ public:
     void getfilepath();
     void existfile();
     void sizefile();
-    void runcommand(const QString &command);
+    void runcommand();
     QString getstring();
+    void deleted();
+    void starttimer();
+    void stoptimer();
+    void exit();
+    void setfile();
 private:
     QString command;
     std::map<QString, void(logger::*)()> commands;
-    File file;
 signals:
     void createS();
     void deleteS();
     void getpathS();
+    void starttimerS();
+    void stoptimerS();
+    void exitS();
+    void setfileS();
+    void updateS();
 public slots:
-    void createSL();
-    void delSL();
     void getpathSL();
 };
-class Timer:public QCoreApplication
-{
-public:
-    Timer(int &argc, char **argv) : QCoreApplication(argc, argv), tick(0) {}
-protected:
-    void start();
-    void stop();
-    void timerEvent(QTimerEvent*);
-private:
-    int tick;
-signals:
-    void check();
-};
+
 
 
 
