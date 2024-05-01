@@ -8,9 +8,9 @@
 
 class File:public QObject
 {
+    Q_OBJECT
 public:
     File();
-    File(QString path);
     int create();
     int del();
     int change();
@@ -23,8 +23,15 @@ protected:
     int setsize(int newsize);
     bool setexist(bool newexist);
 private:
-    bool exist;
-    int size;
-    QString path;
+    bool exist = false;
+    int size = 0;
+    QString path = "None";
+signals:
+    void deletedS();
+    void changedS();
+    void createdS();
+    void updateS();
+public slots:
+    void checkSL();
 };
 #endif // FILE_H
