@@ -5,8 +5,21 @@
 #include <QObject>
 #include <file.h>
 #include <qthread.h>
+#include <QTimer>
+#include <iostream>
+#include <QString>
 using namespace std;
-
+class reader: public QObject
+{
+    Q_OBJECT
+public:
+    reader();
+protected:
+signals:
+    void commandInput(QString);
+public slots:
+    void listenCommand();
+};
 class win:public QCoreApplication
 {
     Q_OBJECT
@@ -15,16 +28,20 @@ public:
 protected:
     void starttimer();
     void stoptimer();
-    int execute();
+    void execute();
     void timerEvent(QTimerEvent *event);
+    QString getstring();
 private:
     int timer;
     File myfile;
     logger loger;
     QThread thread;
+    QTimer *newtimer = new QTimer(this);
+    reader read;
 signals:
-    void updateS();
+    void updateSW();
     void runS();
+    void userinputS(QString input);
 };
 
 

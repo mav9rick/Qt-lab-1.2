@@ -1,15 +1,13 @@
 #ifndef LOGGER_H
 #define LOGGER_H
 #include <map>
-#include <iostream>
 #include <QObject>
 #include <QString>
 #include <QFileInfo>
 #include <file.h>
-#include <timer.h>
 using namespace std;
 
-class logger:public File
+class logger:public QObject
 {
     Q_OBJECT
 public:
@@ -21,9 +19,8 @@ public:
     void getfilepath();
     void existfile();
     void sizefile();
-    void runcommand();
-    QString getstring();
-    void deleted();
+    void runcommand(QString input);
+    void fileinfo(int size, QString name , QString lastmod, bool exist);
     void starttimer();
     void stoptimer();
     void exit();
@@ -39,7 +36,8 @@ signals:
     void stoptimerS();
     void exitS();
     void setfileS();
-    void updateS();
+    void readS();
+    void userinput(QString input);
 public slots:
     void getpathSL();
 };

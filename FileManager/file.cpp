@@ -19,6 +19,10 @@ File::File()
     prevexist = 0;
     prevpath = "None";
 }
+QDateTime File::gettimemod()
+{
+    return timemod;
+}
 QString File::getpath()
 {
     QFileInfo fileinfo(path);
@@ -81,7 +85,7 @@ int File::create() // Метод создания файла
     QTextStream in(stdin),in2(stdin);
     in2 >> name;
     QFile file(name + ".txt");
-    QTextStream out2(&file),out(stdout);
+    QTextStream out2(&file);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
         cout << "Ошибка при открытии файла на чтение." << endl;
@@ -92,7 +96,6 @@ int File::create() // Метод создания файла
     out2 << userInput << "\n";
     out2 << "This is a test file created using Qt.";
     file.close();
-    out << "Данные до создания файла : " << exist << " " << path << " "  << size << "\n";
     cout << "\n";
     cout << "Файл создан успешно." << endl;
     QFileInfo fileinfo(path + "/" + name + ".txt");
@@ -100,14 +103,12 @@ int File::create() // Метод создания файла
     bool newexist = fileinfo.exists();
     setsize(newsize);
     setexist(newexist);
-    out << "Данные только что созданного файла : " << exist << " " << path << " "  << size << "\n";
     emit updateS();
     return 1;
 }
 int File::del() // Метод для удаления файла
 {
-    QTextStream out(stdout),in(stdin);
-    out << "Данные до удаления : " << exist << " " << path << " "  << size << "\n";
+    QTextStream in(stdin);
     cout << "Введите путь к файлу : " ;
     QString filepath;
     in >> filepath;
@@ -121,13 +122,11 @@ int File::del() // Метод для удаления файла
         setsize(0);
         setexist(false);
         emit updateS();
-        out << "Данные после удаления : " << exist << " " << path << " "  << size << "\n";
         return 1;
     }
     else
     {
         cout << "Не удалось удалить файл." << endl;
-        out << "Данные при неудачном удалении : " << exist << " " << path << " "  << size << "\n";
         emit updateS();
         return 0;
     }
@@ -165,11 +164,14 @@ QString File::setfile() // Метод для выбора файла за кот
     QTextStream in(stdin);
     QString filepath;
     in >> filepath;
-    QFileInfo fileinfo;
+    QFileInfo fileinfo(filepath);
     fileinfo.setFile(filepath);
+    timemod = fileinfo.lastModified();
+    QString name = fileinfo.fileName(),lastmod = timemod.toString();
     setpath(filepath);
     setexist(fileinfo.exists());
     setsize(fileinfo.size());
+    cout << "Контроль установлен.";
     emit updateS();
     return filepath;
 }
@@ -178,29 +180,16 @@ void File::checkSL()
     QFileInfo fileinfo(path);
     int currsize = fileinfo.size();
     bool currexist = fileinfo.exists();
-    //cout << "curex : " << currexist << "prevex : " << prevexist << endl;
-    if (currexist != prevexist)
+    QString name = fileinfo.fileName();
+    QDateTime lasttimemod = gettimemod();
+    QString lastmod = lasttimemod.toString();
+    if (currexist != exist || currsize != size)
     {
-        //cout << "Файл был удалён. File" << endl;
-        setexist(false);
-        setsize(0);
-        setpath("None");
-        emit changedS();
-    }
-    else
-    {
-        prevexist = fileinfo.exists();
-        emit updateS();
-    }
-    if(currsize != prevsize)
-    {
-        setsize(fileinfo.size());
-        emit changedS();
-    }
-    else
-    {
-        prevsize = fileinfo.size();
-        emit updateS();
+        setexist(currexist);
+        setsize(currsize);
+        setpath(path);
+        timemod = fileinfo.lastModified();
+        emit changedS(currsize,name,lastmod,currexist);
     }
 }
 

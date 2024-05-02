@@ -18,6 +18,8 @@ public:
     int getsize();
     QString getpath();
     QString setfile();
+    QDateTime gettimemod();
+    void check();
 protected:
     QString setpath(QString newpath);
     int setsize(int newsize);
@@ -25,12 +27,14 @@ protected:
 private:
     bool exist = false;
     int size = 0;
+    QDateTime timemod;
     QString path = "None";
 signals:
     void deletedS();
-    void changedS();
+    void changedS(int size, QString name , QString lastmod, bool exist);
     void createdS();
     void updateS();
+    void testS();
 public slots:
     void checkSL();
 };

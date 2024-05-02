@@ -34,7 +34,7 @@ void logger::displayhelp()
     cout << "/sizefile - узнать размер файла" <<  endl;
     cout << "/starttimer - запуск таймера" <<  endl;
     cout << "/stoptimer - отключение таймера" <<  endl;
-    emit updateS();
+    emit readS();
 }
 void logger::setfile()
 {
@@ -57,7 +57,7 @@ void logger::deletefile()
 void logger::getfilepath()
 {
     cout << "getpath" << endl;
-    emit getpathS();
+    emit readS();
 }
 void logger::changefile()
 {
@@ -71,34 +71,24 @@ void logger::existfile()
 }
 void logger::sizefile()
 {
-    cout << "existfile" << endl;
+    cout << "sizefile" << endl;
     //emit sizeS();
 }
-void logger::deleted()
+void logger::fileinfo(int size, QString name , QString lastmod, bool exist)
 {
     QTextStream out(stdout);
-    QFileInfo file(getpath());
-    QString name = file.fileName();
-    int size = file.size();
-    QString exist = "false";
-    if (file.exists() == 1)
-    {
-        exist = "true";
-    }
-    out << "\n";
-    out << "---------------------------------------------------" << "\n"
-        << "| Имя файла | Существование | Размер | LastChange |" << "\n"
-        << "| " << name << " | " << exist << " | " << size << " | " << "--" << " |" << "\n"
-        << "---------------------------------------------------" << "\n";
-    out << "Файл был удалён." << "\n";
-    emit updateS();
+    //qDebug() << "logger::fileinfo" << "\n";
+    cout << "\n";
+    out << "+----------------------------------------------------+" << "\n"
+        << "|Название|Размер|Существует|Дата последнего изменения|" << "\n"
+        << "+----------------------------------------------------+" << "\n"
+        << "|" << name << "|" << QString::number(size) << "|"<< (exist ? QString("Да") : QString("Нет")) << "|" << lastmod << "|" << "\n"
+        << "+----------------------------------------------------+" << "\n";
+    out.flush();
+    //emit readS();
 }
-void logger::runcommand()
+void logger::runcommand(QString input)
 {
-    cout << "Введите команду : " ;
-    QTextStream in(stdin);
-    QString input;
-    in >> input;
     auto it = commands.find(input);
     if (it != commands.end())
     {
@@ -107,16 +97,8 @@ void logger::runcommand()
     else
     {
         cout << "Неизвестная команда." << endl;
-        emit updateS();
+        emit readS();
     }
-}
-QString logger::getstring()
-{
-    cout << "Введите команду : " ;
-    QTextStream in(stdin);
-    QString input;
-    in >> input;
-    return input;
 }
 void logger::getpathSL()
 {
