@@ -20,15 +20,16 @@ public:
     QString setfile();
     QDateTime gettimemod();
     void check();
+    void testmethod();
 protected:
     QString setpath(QString newpath);
     int setsize(int newsize);
     bool setexist(bool newexist);
 private:
-    bool exist = false;
-    int size = 0;
+    bool exist;
+    int size;
     QDateTime timemod;
-    QString path = "None";
+    QString path;
 signals:
     void deletedS();
     void changedS(int size, QString name , QString lastmod, bool exist);

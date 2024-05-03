@@ -16,9 +16,9 @@ public:
     reader();
 protected:
 signals:
-    void commandInput(QString);
+    void input(QString);
 public slots:
-    void listenCommand();
+    void readcommand();
 };
 class win:public QCoreApplication
 {
@@ -29,10 +29,7 @@ protected:
     void starttimer();
     void stoptimer();
     void execute();
-    void timerEvent(QTimerEvent *event);
-    QString getstring();
 private:
-    int timer;
     File myfile;
     logger loger;
     QThread thread;

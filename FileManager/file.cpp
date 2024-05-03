@@ -9,15 +9,11 @@
 #include <QCoreApplication>
 using namespace std;
 const QString defpath = QDir::currentPath();
-QString prevpath;
-QDateTime prevlastmod;
-int prevsize;
-bool prevexist;
 File::File()
 {
-    prevsize = 0;
-    prevexist = 0;
-    prevpath = "None";
+    exist = false;
+    size = 0;
+    path = "None";
 }
 QDateTime File::gettimemod()
 {
@@ -32,13 +28,11 @@ QString File::getpath()
 QString File::setpath(QString newpath)
 {
     path = newpath;
-    prevpath = path;
     return path;
 }
 int File::setsize(int newsize)
 {
     size = newsize;
-    prevsize = size;
     return size;
 }
 int File::getsize()
@@ -50,7 +44,6 @@ int File::getsize()
 bool File::setexist(bool newexist)
 {
     exist = newexist;
-    prevexist = exist;
     return exist;
 }
 bool File::getexist()
@@ -171,7 +164,7 @@ QString File::setfile() // Метод для выбора файла за кот
     setpath(filepath);
     setexist(fileinfo.exists());
     setsize(fileinfo.size());
-    cout << "Контроль установлен.";
+    cout << "Контроль установлен." << endl;
     emit updateS();
     return filepath;
 }
@@ -192,7 +185,11 @@ void File::checkSL()
         emit changedS(currsize,name,lastmod,currexist);
     }
 }
-
+void File::testmethod()
+{
+    cout << "testMethod" << endl;
+    emit updateS();
+}
 
 
 

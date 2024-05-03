@@ -1,17 +1,17 @@
 #include <win.h>
 reader::reader()
 {}
-void reader::listenCommand()
+void reader::readcommand()
 {
     cout << "Введите команду : " ;
     string s;
     getline(cin,s);
     QString df(s.c_str());
-    emit commandInput(df);
+    emit input(df);
 }
 win::win(int argc, char*argv[]):QCoreApplication(argc,argv)
 {
-    connect(&thread,&QThread::started,&read,&reader::listenCommand);
+    connect(&thread,&QThread::started,&read,&reader::readcommand);
     connect(&thread,&QThread::finished,&read,&reader::deleteLater);
 
     connect(&loger,&logger::createS,&myfile,&File::create);
@@ -21,15 +21,15 @@ win::win(int argc, char*argv[]):QCoreApplication(argc,argv)
     connect(&loger,&logger::stoptimerS,this,&win::stoptimer);
     connect(&loger,&logger::exitS,this,&win::execute);
     connect(&loger,&logger::setfileS,&myfile,&File::setfile);
-    connect(&loger,&logger::readS,&read,&reader::listenCommand);
+    connect(&loger,&logger::readS,&read,&reader::readcommand);
+    connect(&loger,&logger::testS,&myfile,&File::testmethod);
 
-    connect(&myfile,&File::updateS,&read,&reader::listenCommand);
+    connect(&myfile,&File::updateS,&read,&reader::readcommand);
     connect(&myfile,&File::changedS,&loger,&logger::fileinfo);
-    connect(&myfile,&File::testS,&loger,&logger::getfilepath);
 
-    connect(&read,&reader::commandInput,&loger,&logger::runcommand);
+    connect(&read,&reader::input,&loger,&logger::runcommand);
     connect(this,&win::updateSW,&myfile,&File::checkSL);
-    connect(this,&win::runS,&read,&reader::listenCommand);
+    connect(this,&win::runS,&read,&reader::readcommand);
 
     connect(newtimer,&QTimer::timeout,&myfile,&File::checkSL);
 
@@ -38,44 +38,17 @@ win::win(int argc, char*argv[]):QCoreApplication(argc,argv)
 }
 void win::execute()
 {
-    //cout << "Остановка программы...." << endl;
     thread.quit();
     this->exit();
 }
 void win::starttimer()
 {
     newtimer->start(3000);
-    //cout << "Таймер запущен" << "\n";
     emit runS();
-    /*timer = startTimer(3000);
-    qDebug() << "starting timer" << "\n";
-    emit runS();*/
 }
 void win::stoptimer()
 {
     newtimer->stop();
-    //cout << "Таймер остановлен" << "\n";
-    //killTimer(timer);
     emit runS();
 }
-void win::timerEvent(QTimerEvent *event)
-{
-    if (event->timerId() == timer)
-    {
-        //qDebug() << "emit updateS" << "\n";
-        emit updateSW();
-        //QCoreApplication::processEvents();
-    }
-    else
-        QObject::timerEvent(event);
-}
-QString win::getstring()
-{
-    //cout << endl;
-    //cout << "Введите команду : " ;
-    QTextStream in(stdin);
-    QString input;
-    in >> input;
-    emit userinputS(input);
-    return input;
-}
+

@@ -13,18 +13,8 @@ class logger:public QObject
 public:
     logger();
     void displayhelp();
-    void createfile();
-    void deletefile();
-    void changefile();
-    void getfilepath();
-    void existfile();
-    void sizefile();
     void runcommand(QString input);
     void fileinfo(int size, QString name , QString lastmod, bool exist);
-    void starttimer();
-    void stoptimer();
-    void exit();
-    void setfile();
 private:
     QString command;
     std::map<QString, void(logger::*)()> commands;
@@ -38,8 +28,12 @@ signals:
     void setfileS();
     void readS();
     void userinput(QString input);
+    void testS();
+    void changefileS();
+    void existS();
+    void getfilepathS();
+    void sizeS();
 public slots:
-    void getpathSL();
 };
 
 

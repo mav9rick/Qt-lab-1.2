@@ -8,18 +8,17 @@ using namespace std;
 logger::logger()
 {
     commands["/help"] = &logger::displayhelp;
-    commands["/createfile"] = &logger::createfile;
-    commands["/deletefile"] = &logger::deletefile;
-    commands["/changefile"] = &logger::changefile;
-    commands["/getpath"] = &logger::getfilepath;
-    commands["/existfile"] = &logger::existfile;
-    commands["/sizefile"] = &logger::sizefile;
-    commands["/starttimer"] = &logger::starttimer;
-    commands["/stoptimer"] = &logger::stoptimer;
-    commands["/exit"] = &logger::exit;
-    commands["/setfile"] = &logger::setfile;
-    //QObject::connect(&timer,&Timer::checkS,&file,&File::checkSL);
-    //QObject::connect(&file, &File::deletedS,this, &logger::deleted);
+    commands["/createfile"] = &logger::createS;
+    commands["/deletefile"] = &logger::deleteS;
+    commands["/changefile"] = &logger::changefileS;
+    commands["/getpath"] = &logger::getfilepathS;
+    commands["/existfile"] = &logger::existS;
+    commands["/sizefile"] = &logger::sizeS;
+    commands["/starttimer"] = &logger::starttimerS;
+    commands["/stoptimer"] = &logger::stoptimerS;
+    commands["/exit"] = &logger::exitS;
+    commands["/setfile"] = &logger::setfileS;
+    commands["/test"]=&logger::testS;
 }
 void logger::displayhelp()
 {
@@ -36,48 +35,9 @@ void logger::displayhelp()
     cout << "/stoptimer - отключение таймера" <<  endl;
     emit readS();
 }
-void logger::setfile()
-{
-    emit setfileS();
-}
-void logger::exit()
-{
-    emit exitS();
-}
-void logger::createfile()
-{
-    cout << "~Метод создания файла~" << endl;
-    emit createS();
-}
-void logger::deletefile()
-{
-    cout << "~Метод удаления файла~" << endl;
-    emit deleteS();
-}
-void logger::getfilepath()
-{
-    cout << "getpath" << endl;
-    emit readS();
-}
-void logger::changefile()
-{
-    cout << "changefile" << endl;
-    //emit changeS();
-}
-void logger::existfile()
-{
-    cout << "existfile" << endl;
-    //emit existS();
-}
-void logger::sizefile()
-{
-    cout << "sizefile" << endl;
-    //emit sizeS();
-}
 void logger::fileinfo(int size, QString name , QString lastmod, bool exist)
 {
     QTextStream out(stdout);
-    //qDebug() << "logger::fileinfo" << "\n";
     cout << "\n";
     out << "+----------------------------------------------------+" << "\n"
         << "|Название|Размер|Существует|Дата последнего изменения|" << "\n"
@@ -85,7 +45,6 @@ void logger::fileinfo(int size, QString name , QString lastmod, bool exist)
         << "|" << name << "|" << QString::number(size) << "|"<< (exist ? QString("Да") : QString("Нет")) << "|" << lastmod << "|" << "\n"
         << "+----------------------------------------------------+" << "\n";
     out.flush();
-    //emit readS();
 }
 void logger::runcommand(QString input)
 {
@@ -100,22 +59,8 @@ void logger::runcommand(QString input)
         emit readS();
     }
 }
-void logger::getpathSL()
-{
-    cout << "~Метод возвращения пути файла~" << endl;
-    QTextStream out(stdout);
-    QString path;
-    path = "&File::getpath();";
-    out << "Путь к файлу : " << path << "\n";
-}
-void logger::starttimer()
-{
-    emit starttimerS();
-}
-void logger::stoptimer()
-{
-    emit stoptimerS();
-}
+
+
 
 
 
