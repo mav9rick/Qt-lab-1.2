@@ -1,56 +1,27 @@
 #include "file.h"
-#include <QFile>
-#include <QTextStream>
-#include <QDebug>
-#include <QString>
-#include <QFileInfo>
-#include <QDir>
-#include <iostream>
-#include <QCoreApplication>
+
 using namespace std;
 const QString defpath = QDir::currentPath();
-File::File()
+int filestats::check(QString newpath)
 {
-    exist = false;
-    size = 0;
-    path = "None";
+    QFileInfo fileinfo(newpath);
+    int currsize = fileinfo.size();
+    bool currexist = fileinfo.exists();
+    if (currexist != exist || currsize != size)
+    {
+        exist = currexist;
+        size = currsize;
+        timemod = fileinfo.lastModified();
+        return 1;
+    }
+    return 0;
 }
-QDateTime File::gettimemod()
+filestats::filestats(QString path)
 {
-    return timemod;
-}
-QString File::getpath()
-{
-    QFileInfo fileinfo(path);
-    path = fileinfo.absoluteFilePath();
-    return path;
-}
-QString File::setpath(QString newpath)
-{
-    path = newpath;
-    return path;
-}
-int File::setsize(int newsize)
-{
-    size = newsize;
-    return size;
-}
-int File::getsize()
-{
-    QFileInfo fileinfo(path);
-    size = fileinfo.size();
-    return size;
-}
-bool File::setexist(bool newexist)
-{
-    exist = newexist;
-    return exist;
-}
-bool File::getexist()
-{
-    QFileInfo fileinfo(path);
-    exist = fileinfo.exists();
-    return exist;
+    QFileInfo file(path);
+    exist = file.exists();
+    size = file.size();
+    timemod = file.lastModified();
 }
 int File::create() // Метод создания файла
 {
@@ -66,12 +37,10 @@ int File::create() // Метод создания файла
         QString newpath;
         in1 >> newpath;
         QDir::setCurrent(newpath);
-        setpath(newpath);
     }
     else
     {
         QDir::setCurrent(defpath);
-        setpath(defpath);
     }
     cout << "Введите название файла : ";
     QString userInput,name;
@@ -91,11 +60,6 @@ int File::create() // Метод создания файла
     file.close();
     cout << "\n";
     cout << "Файл создан успешно." << endl;
-    QFileInfo fileinfo(path + "/" + name + ".txt");
-    int newsize = fileinfo.size();
-    bool newexist = fileinfo.exists();
-    setsize(newsize);
-    setexist(newexist);
     emit updateS();
     return 1;
 }
@@ -105,15 +69,15 @@ int File::del() // Метод для удаления файла
     cout << "Введите путь к файлу : " ;
     QString filepath;
     in >> filepath;
-    cout << "Введите название файла : " ;
-    QString filename;
-    in >> filename;
-    QFile file(filepath + "/" + filename);
+    if (!QFileInfo::exists(filepath))
+    {
+        cout << "Файл не найден." << endl;
+        return 0;
+    }
+    QFile file(filepath);
     if (file.remove())
     {
         cout << "Файл успешно удален." << endl;
-        setsize(0);
-        setexist(false);
         emit updateS();
         return 1;
     }
@@ -126,18 +90,20 @@ int File::del() // Метод для удаления файла
 }
 int File::change()
 {
-    QTextStream in(stdin);
-    QString filePath = getpath();
+    QTextStream in(stdin),in1(stdin);
+    cout << "Введите путь к файлу : " ;
+    QString filePath;
+    in >> filePath;
     if (!QFileInfo::exists(filePath))
     {
         cout << "Файл не найден." << endl;
-        return 1;
+        return 0;
     }
     QFile file(filePath);
     if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
     {
         cout << "Ошибка открытия файла для чтения и записи." << endl;
-        return 1;
+        return 0;
     }
     cout << "Введите содержимое файла : ";
     QString userInput = in.readLine();
@@ -145,50 +111,65 @@ int File::change()
     out << userInput << "\n";
     file.close();
     cout << "Файл был успешно изменён." << endl;
-    QFileInfo fileinfo(filePath);
-    int newsize = fileinfo.size();
-    setsize(newsize);
     emit updateS();
-    return 0;
+    return 1;
 }
-QString File::setfile() // Метод для выбора файла за которым необходимо установить контроль
+int File::addfile()
 {
-    cout << "Введите путь к файлу за которым необходимо установить контроль : " ;
+    cout << endl;
+    cout << "Введите путь к файлу , который необходимо добавить в список : " ;
     QTextStream in(stdin);
     QString filepath;
     in >> filepath;
-    QFileInfo fileinfo(filepath);
-    fileinfo.setFile(filepath);
-    timemod = fileinfo.lastModified();
-    QString name = fileinfo.fileName(),lastmod = timemod.toString();
-    setpath(filepath);
-    setexist(fileinfo.exists());
-    setsize(fileinfo.size());
-    cout << "Контроль установлен." << endl;
+    filestats file(filepath);
+    int n = pathlist.size();
+    for (int i = 0; i < n;i++)
+    {
+        if (filepath == pathlist[i])
+        {
+            cout << "Файл уже есть в списке" << endl;
+            emit updateS();
+            return 0;
+        }
+    }
+    fileinfo.append(file);
+    pathlist.append(filepath);
+    cout << "Файл добавлен в список" << endl;
     emit updateS();
-    return filepath;
+    return 1;
+}
+void File::removefile()
+{
+    cout << endl;
+    cout << "Введите путь к файлу , который необходимо убрать из списка : " ;
+    QTextStream in(stdin);
+    QString filepath;
+    in >> filepath;
+    filestats file(filepath);
+    fileinfo.removeOne(file);
+    pathlist.removeOne(filepath);
+    cout << "Файл удалён из списка" << endl;
+    emit updateS();
 }
 void File::checkSL()
 {
-    QFileInfo fileinfo(path);
-    int currsize = fileinfo.size();
-    bool currexist = fileinfo.exists();
-    QString name = fileinfo.fileName();
-    QDateTime lasttimemod = gettimemod();
-    QString lastmod = lasttimemod.toString();
-    if (currexist != exist || currsize != size)
+    int n = pathlist.size();
+    for (int i = 0; i < n ;i++)
     {
-        setexist(currexist);
-        setsize(currsize);
-        setpath(path);
-        timemod = fileinfo.lastModified();
-        emit changedS(currsize,name,lastmod,currexist);
+        int c = fileinfo[i].check(pathlist[i]);
+        if (c == 1)
+        {
+            QFileInfo file(pathlist[i]);
+            QDateTime lasttimemod = file.lastModified();
+            QString lastmod = lasttimemod.toString();
+            emit changedS(file.size(),file.fileName(),lastmod,file.exists());
+        }
     }
 }
-void File::testmethod()
+void File::listfiles()
 {
-    cout << "testMethod" << endl;
-    emit updateS();
+    int n = pathlist.size();
+    emit listfilesS(n,pathlist);
 }
 
 

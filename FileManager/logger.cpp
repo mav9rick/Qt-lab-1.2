@@ -1,8 +1,4 @@
 #include "logger.h"
-#include <iostream>
-#include <map>
-#include <QTextStream>
-#include <QThread>
 
 using namespace std;
 logger::logger()
@@ -11,28 +7,26 @@ logger::logger()
     commands["/createfile"] = &logger::createS;
     commands["/deletefile"] = &logger::deleteS;
     commands["/changefile"] = &logger::changefileS;
-    commands["/getpath"] = &logger::getfilepathS;
-    commands["/existfile"] = &logger::existS;
-    commands["/sizefile"] = &logger::sizeS;
     commands["/starttimer"] = &logger::starttimerS;
     commands["/stoptimer"] = &logger::stoptimerS;
     commands["/exit"] = &logger::exitS;
-    commands["/setfile"] = &logger::setfileS;
-    commands["/test"]=&logger::testS;
+    commands["/addfile"] = &logger::addfileS;
+    commands["/removefile"] = &logger::removefileS;
+    commands["/list"]=&logger::listS;
 }
 void logger::displayhelp()
 {
-    cout << "Доступные команды:" <<  endl;
-    cout << "/help - отобразить список доступных команд" <<  endl;
-    cout << "/exit - завершить программу" <<  endl;
-    cout << "/createfile - создать файл" <<  endl;
-    cout << "/deletefile - удалить файл" <<  endl;
-    cout << "/changefile - изменить файл" <<  endl;
-    cout << "/getpath- вернуть путь к файлу" <<  endl;
-    cout << "/existfile - проверить существование файла" <<  endl;
-    cout << "/sizefile - узнать размер файла" <<  endl;
-    cout << "/starttimer - запуск таймера" <<  endl;
-    cout << "/stoptimer - отключение таймера" <<  endl;
+    cout << "Доступные команды:" <<  endl
+         << "/help - отобразить список доступных команд" <<  endl
+         << "/list - список файлов" <<  endl
+         << "/createfile - создать файл" <<  endl
+         << "/deletefile - удалить файл" <<  endl
+         << "/changefile - изменить файл" <<  endl
+         << "/addfile - добавить файл в список контроля" <<  endl
+         << "/removefile - удалить файл в списка контроля" <<  endl
+         << "/starttimer - запуск таймера" <<  endl
+         << "/stoptimer - отключение таймера" <<  endl
+         << "/exit - завершить программу" <<  endl;
     emit readS();
 }
 void logger::fileinfo(int size, QString name , QString lastmod, bool exist)
@@ -56,6 +50,36 @@ void logger::runcommand(QString input)
     else
     {
         cout << "Неизвестная команда." << endl;
+        emit readS();
+    }
+}
+void logger::list(int n,QVector<QString> pathlist)
+{
+    QTextStream out(stdout);
+    cout << "\n";
+    cout << "+----------------------------------------------------+" << "\n"
+         << "|Название|Размер|Существует|Дата последнего изменения|" << "\n"
+         << "+----------------------------------------------------+" << "\n";
+    if (n != 0)
+    {
+        for (int i = 0; i < n ;i++)
+        {
+            QString path = pathlist[i];
+            QFileInfo fileinfo(path);
+            QDateTime lasttimemod = fileinfo.lastModified();
+            QString name = fileinfo.fileName(),lastmod = lasttimemod.toString();
+            bool exist = fileinfo.exists();
+            int size = fileinfo.size();
+            out << "|" << name << "|" << QString::number(size) << "|"<< (exist ? QString("Да") : QString("Нет")) << "|" << lastmod << "|" << "\n"
+                << "+----------------------------------------------------+" << "\n";
+            out.flush();
+        }
+        emit readS();
+    }
+    else
+    {
+        cout << " ~Список файлов пуст~ " << endl
+             << "+----------------------------------------------------+" << endl;
         emit readS();
     }
 }

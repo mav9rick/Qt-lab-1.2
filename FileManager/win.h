@@ -6,7 +6,6 @@
 #include <file.h>
 #include <qthread.h>
 #include <QTimer>
-#include <iostream>
 #include <QString>
 using namespace std;
 class reader: public QObject
@@ -14,7 +13,6 @@ class reader: public QObject
     Q_OBJECT
 public:
     reader();
-protected:
 signals:
     void input(QString);
 public slots:

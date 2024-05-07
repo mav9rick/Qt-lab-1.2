@@ -15,24 +15,22 @@ public:
     void displayhelp();
     void runcommand(QString input);
     void fileinfo(int size, QString name , QString lastmod, bool exist);
+    void list(int n,QVector<QString> pathlist);
 private:
     QString command;
     std::map<QString, void(logger::*)()> commands;
 signals:
     void createS();
     void deleteS();
-    void getpathS();
     void starttimerS();
     void stoptimerS();
     void exitS();
-    void setfileS();
+    void addfileS();
+    void removefileS();
     void readS();
     void userinput(QString input);
-    void testS();
     void changefileS();
-    void existS();
-    void getfilepathS();
-    void sizeS();
+    void listS();
 public slots:
 };
 

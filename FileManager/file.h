@@ -5,37 +5,42 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QCoreApplication>
-
-class File:public QObject
+#include <QString>
+#include <QDir>
+#include <iostream>
+class filestats:public QFileInfo
 {
-    Q_OBJECT
-public:
-    File();
-    int create();
-    int del();
-    int change();
-    bool getexist();
-    int getsize();
-    QString getpath();
-    QString setfile();
-    QDateTime gettimemod();
-    void check();
-    void testmethod();
-protected:
-    QString setpath(QString newpath);
-    int setsize(int newsize);
-    bool setexist(bool newexist);
 private:
     bool exist;
     int size;
     QDateTime timemod;
-    QString path;
+public:
+    filestats(QString path);
+    int check(QString newpath);
+};
+class File:public QObject
+{
+    Q_OBJECT
+public:
+    File(){};
+    int create();
+    int del();
+    int change();
+    int addfile();
+    void removefile();
+    void check();
+    void listfiles();
+private:
+    QVector<QString> pathlist;
+    QVector<filestats> fileinfo;
 signals:
     void deletedS();
     void changedS(int size, QString name , QString lastmod, bool exist);
     void createdS();
     void updateS();
     void testS();
+    void fileinfoS(QString pathlist);
+    void listfilesS(int n , QVector<QString> pathlist);
 public slots:
     void checkSL();
 };

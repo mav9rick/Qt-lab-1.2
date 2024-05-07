@@ -16,16 +16,17 @@ win::win(int argc, char*argv[]):QCoreApplication(argc,argv)
 
     connect(&loger,&logger::createS,&myfile,&File::create);
     connect(&loger,&logger::deleteS,&myfile,&File::del);
-    connect(&loger,&logger::getpathS,&myfile,&File::getpath);
     connect(&loger,&logger::starttimerS,this,&win::starttimer);
     connect(&loger,&logger::stoptimerS,this,&win::stoptimer);
     connect(&loger,&logger::exitS,this,&win::execute);
-    connect(&loger,&logger::setfileS,&myfile,&File::setfile);
     connect(&loger,&logger::readS,&read,&reader::readcommand);
-    connect(&loger,&logger::testS,&myfile,&File::testmethod);
+    connect(&loger,&logger::listS,&myfile,&File::listfiles);
+    connect(&loger,&logger::addfileS,&myfile,&File::addfile);
+    connect(&loger,&logger::removefileS,&myfile,&File::removefile);
 
     connect(&myfile,&File::updateS,&read,&reader::readcommand);
     connect(&myfile,&File::changedS,&loger,&logger::fileinfo);
+    connect(&myfile,&File::listfilesS,&loger,&logger::list);
 
     connect(&read,&reader::input,&loger,&logger::runcommand);
     connect(this,&win::updateSW,&myfile,&File::checkSL);
