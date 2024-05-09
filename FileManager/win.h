@@ -28,8 +28,8 @@ protected:
     void stoptimer();
     void execute();
 private:
-    File myfile;
-    logger loger;
+    File &myfile = File::Instance();
+    logger &loger = logger::Instance();
     QThread thread;
     QTimer *newtimer = new QTimer(this);
     reader read;

@@ -23,6 +23,7 @@ win::win(int argc, char*argv[]):QCoreApplication(argc,argv)
     connect(&loger,&logger::listS,&myfile,&File::listfiles);
     connect(&loger,&logger::addfileS,&myfile,&File::addfile);
     connect(&loger,&logger::removefileS,&myfile,&File::removefile);
+    connect(&loger,&logger::changefileS,&myfile,&File::change);
 
     connect(&myfile,&File::updateS,&read,&reader::readcommand);
     connect(&myfile,&File::changedS,&loger,&logger::fileinfo);
@@ -34,6 +35,8 @@ win::win(int argc, char*argv[]):QCoreApplication(argc,argv)
 
     connect(newtimer,&QTimer::timeout,&myfile,&File::checkSL);
 
+    cout << "~Консольное приложение для отслеживания изменений файлов~" << endl
+         << "| Вывести список доступных комманд - /help |" << endl;
     read.moveToThread(&thread);
     thread.start();
 }

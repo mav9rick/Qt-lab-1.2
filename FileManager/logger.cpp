@@ -7,8 +7,8 @@ logger::logger()
     commands["/createfile"] = &logger::createS;
     commands["/deletefile"] = &logger::deleteS;
     commands["/changefile"] = &logger::changefileS;
-    commands["/starttimer"] = &logger::starttimerS;
-    commands["/stoptimer"] = &logger::stoptimerS;
+    commands["/start"] = &logger::starttimerS;
+    commands["/stop"] = &logger::stoptimerS;
     commands["/exit"] = &logger::exitS;
     commands["/addfile"] = &logger::addfileS;
     commands["/removefile"] = &logger::removefileS;
@@ -17,16 +17,18 @@ logger::logger()
 void logger::displayhelp()
 {
     cout << "Доступные команды:" <<  endl
+         << "~ Каждая команда начинается с / ~" << endl
          << "/help - отобразить список доступных команд" <<  endl
          << "/list - список файлов" <<  endl
          << "/createfile - создать файл" <<  endl
          << "/deletefile - удалить файл" <<  endl
          << "/changefile - изменить файл" <<  endl
          << "/addfile - добавить файл в список контроля" <<  endl
-         << "/removefile - удалить файл в списка контроля" <<  endl
-         << "/starttimer - запуск таймера" <<  endl
-         << "/stoptimer - отключение таймера" <<  endl
-         << "/exit - завершить программу" <<  endl;
+         << "/removefile - удалить файл из списка контроля" <<  endl
+         << "/start - запуск процесса проверки файла" <<  endl
+         << "/stop - остановка процесса проверки файла" <<  endl
+         << "/exit - завершить программу" <<  endl
+         << "(Путь к файлу указывается по типу : C:/Директория/Ваш_Файл.txt)" << endl;
     emit readS();
 }
 void logger::fileinfo(int size, QString name , QString lastmod, bool exist)

@@ -16,9 +16,14 @@ public:
     void runcommand(QString input);
     void fileinfo(int size, QString name , QString lastmod, bool exist);
     void list(int n,QVector<QString> pathlist);
+    static logger& Instance()
+    {
+        static logger i;
+        return i;
+    }
 private:
     QString command;
-    std::map<QString, void(logger::*)()> commands;
+    map<QString, void(logger::*)()> commands;
 signals:
     void createS();
     void deleteS();

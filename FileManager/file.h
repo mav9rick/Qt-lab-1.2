@@ -30,6 +30,11 @@ public:
     void removefile();
     void check();
     void listfiles();
+    static File& Instance()
+    {
+        static File i;
+        return i;
+    }
 private:
     QVector<QString> pathlist;
     QVector<filestats> fileinfo;
@@ -38,7 +43,6 @@ signals:
     void changedS(int size, QString name , QString lastmod, bool exist);
     void createdS();
     void updateS();
-    void testS();
     void fileinfoS(QString pathlist);
     void listfilesS(int n , QVector<QString> pathlist);
 public slots:
