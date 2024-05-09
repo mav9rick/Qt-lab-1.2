@@ -23,7 +23,7 @@ filestats::filestats(QString path)
     size = file.size();
     timemod = file.lastModified();
 }
-int File::create() // Метод создания файла
+int File::create()
 {
     cout << "Выберите где создать файл : " << endl
          << "1 - Создать в стандартной директории." << endl
@@ -56,14 +56,13 @@ int File::create() // Метод создания файла
     cout << "Введите содержание файла : ";
     userInput = in.readLine();
     out2 << userInput << "\n";
-    out2 << "This is a test file created using Qt.";
     file.close();
     cout << "\n";
     cout << "Файл создан успешно." << endl;
     emit updateS();
     return 1;
 }
-int File::del() // Метод для удаления файла
+int File::del()
 {
     QTextStream in(stdin);
     cout << "Введите путь к файлу : " ;
@@ -100,14 +99,15 @@ int File::change()
         return 0;
     }
     QFile file(filePath);
-    if (!file.open(QIODevice::ReadWrite | QIODevice::Text))
+    QTextStream out(&file);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
         cout << "Ошибка открытия файла для чтения и записи." << endl;
         return 0;
     }
     cout << "Введите содержимое файла : ";
-    QString userInput = in.readLine();
-    QTextStream out(&file);
+    QString userInput;
+    userInput = in1.readLine();
     out << userInput << "\n";
     file.close();
     cout << "Файл был успешно изменён." << endl;

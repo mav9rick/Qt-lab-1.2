@@ -28,7 +28,6 @@ public:
     int change();
     int addfile();
     void removefile();
-    void check();
     void listfiles();
     static File& Instance()
     {

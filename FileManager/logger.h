@@ -36,7 +36,6 @@ signals:
     void userinput(QString input);
     void changefileS();
     void listS();
-public slots:
 };
 
 

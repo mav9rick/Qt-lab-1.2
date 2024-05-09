@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 13.0.0, 2024-05-08T15:45:11. -->
+<!-- Written by QtCreator 13.0.0, 2024-05-09T21:03:11. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -136,8 +136,8 @@
     <value type="int" key="Qt4ProjectManager.Qt4BuildConfiguration.BuildConfiguration">2</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.1">
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Qt projects\lab 1.1\Qt lab 1.2\FileManager\build\Desktop_Qt_6_7_0_MSVC2019_64bit-u0412u044bu043fu0443u0441u043a</value>
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">C:/Qt projects/lab 1.1/Qt lab 1.2/FileManager/build/Desktop_Qt_6_7_0_MSVC2019_64bit-u0412u044bu043fu0443u0441u043a</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">C:\Qt projects\lab 1.1\Qt lab 1.2\FileManager\build\Release</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory.shadowDir">C:/Qt projects/lab 1.1/Qt lab 1.2/FileManager/build/Release</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -207,7 +207,7 @@
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseTerminal">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Qt projects/lab 1.1/Qt lab 1.2/FileManager/build/Desktop_Qt_6_7_0_MSVC2019_64bit-u0412u044bu043fu0443u0441u043a</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Qt projects/lab 1.1/Qt lab 1.2/FileManager/build/Release</value>
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>
@@ -375,7 +375,6 @@
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Qt projects/lab 1.1/Qt lab 1.2/FileManager/build/Desktop_Qt_6_7_0_MinGW_64_bit-Release</value>
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>
