@@ -85,12 +85,37 @@ void logger::list(int n,QVector<QString> pathlist)
         emit readS();
     }
 }
-
-
-
-
-
-
-
-
-
+void logger::info(int c)
+{
+    QTextStream out(stdout);
+    switch(c)
+    {
+    case -1:
+        out << "ОШИБКА" << "\n";
+        out.flush();
+        break;
+    case 0:
+        out << "Введите путь к файлу : " ;
+        out.flush();
+        break;
+    case 1:
+        out << "Операция выполнена успешно" << "\n";
+        out.flush();
+        break;
+    case 2:
+        out << "Введите название файла : ";
+        out.flush();
+        break;
+    case 3:
+        out << "Введите содержимое файла : ";
+        out.flush();
+        break;
+    case 4:
+        out << "Введите директорию где создать файл : ";
+        out.flush();
+        break;
+    case 5:
+        out << "Введите команду: " ;
+        break;
+    }
+}

@@ -8,16 +8,7 @@
 #include <QTimer>
 #include <QString>
 using namespace std;
-class reader: public QObject
-{
-    Q_OBJECT
-public:
-    reader();
-signals:
-    void input(QString);
-public slots:
-    void readcommand();
-};
+
 class win:public QCoreApplication
 {
     Q_OBJECT
@@ -32,7 +23,6 @@ private:
     logger &loger = logger::Instance();
     QThread thread;
     QTimer *newtimer = new QTimer(this);
-    reader read;
 signals:
     void updateSW();
     void runS();

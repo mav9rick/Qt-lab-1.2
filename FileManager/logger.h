@@ -21,6 +21,7 @@ public:
         static logger i;
         return i;
     }
+    void info(int c);
 private:
     QString command;
     map<QString, void(logger::*)()> commands;
