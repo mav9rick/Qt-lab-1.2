@@ -17,4 +17,4 @@
 - Класс `win` создает таймер для проверки файла и соединяет классы `logger` и `File`.
 - Класс `reader` отвечает за считывание команд.
 ## UML-диаграмма
-![Иллюстрация к проекту](https://github.com/mav9rick/Qt-lab-1.2/raw//develop/FileManagerUML.png)
+![Иллюстрация к проекту](https://github.com/mav9rick/Qt-lab-1.2/raw//main/FileManagerUML2.png)
