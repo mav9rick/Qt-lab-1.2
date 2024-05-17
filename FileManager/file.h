@@ -39,14 +39,14 @@ public:
     int del();
     int change();
     int addfile();
-    void removefile();
+    int removefile();
     void listfiles();
     static File& Instance()
     {
         static File i;
         return i;
     }
-    reader read;
+    reader r;
 private:
     QVector<QString> pathlist;
     QVector<filestats> fileinfo;
@@ -61,4 +61,5 @@ signals:
 public slots:
     void checkSL();
 };
+
 #endif // FILE_H

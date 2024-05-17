@@ -34,7 +34,7 @@ void logger::displayhelp()
 void logger::fileinfo(int size, QString name , QString lastmod, bool exist)
 {
     QTextStream out(stdout);
-    cout << "\n";
+    out << "\n";
     out << "+----------------------------------------------------+" << "\n"
         << "|Название|Размер|Существует|Дата последнего изменения|" << "\n"
         << "+----------------------------------------------------+" << "\n"
@@ -58,8 +58,7 @@ void logger::runcommand(QString input)
 void logger::list(int n,QVector<QString> pathlist)
 {
     QTextStream out(stdout);
-    cout << "\n";
-    cout << "+----------------------------------------------------+" << "\n"
+    out << "+----------------------------------------------------+" << "\n"
          << "|Название|Размер|Существует|Дата последнего изменения|" << "\n"
          << "+----------------------------------------------------+" << "\n";
     if (n != 0)
@@ -74,14 +73,13 @@ void logger::list(int n,QVector<QString> pathlist)
             int size = fileinfo.size();
             out << "|" << name << "|" << QString::number(size) << "|"<< (exist ? QString("Да") : QString("Нет")) << "|" << lastmod << "|" << "\n"
                 << "+----------------------------------------------------+" << "\n";
-            out.flush();
         }
         emit readS();
     }
     else
     {
-        cout << " ~Список файлов пуст~ " << endl
-             << "+----------------------------------------------------+" << endl;
+        out << " ~Список файлов пуст~ " << "\n"
+             << "+----------------------------------------------------+" << "\n";
         emit readS();
     }
 }
@@ -92,27 +90,21 @@ void logger::info(int c)
     {
     case -1:
         out << "ОШИБКА" << "\n";
-        out.flush();
         break;
     case 0:
         out << "Введите путь к файлу : " ;
-        out.flush();
         break;
     case 1:
         out << "Операция выполнена успешно" << "\n";
-        out.flush();
         break;
     case 2:
         out << "Введите название файла : ";
-        out.flush();
         break;
     case 3:
         out << "Введите содержимое файла : ";
-        out.flush();
         break;
     case 4:
         out << "Введите директорию где создать файл : ";
-        out.flush();
         break;
     case 5:
         out << "Введите команду: " ;

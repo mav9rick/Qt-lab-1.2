@@ -42,10 +42,10 @@ filestats::filestats(QString path)
 int File::create()
 {
     emit infoS(4);
-    QString path = read.read();
+    QString path = r.read();
     QDir::setCurrent(path);
     emit infoS(2);
-    QString userInput,name = read.read();
+    QString userInput,name = r.read();
     QFile file(name + ".txt");
     if (!QFileInfo::exists(path))
     {
@@ -61,7 +61,7 @@ int File::create()
         return 0;
     }
     emit infoS(3);
-    userInput = read.read();
+    userInput = r.read();
     out2 << userInput << "\n";
     file.close();
     emit infoS(1);
@@ -72,7 +72,7 @@ int File::del()
 {
     emit infoS(0);
     QString filepath;
-    filepath = read.read();
+    filepath = r.read();
     if (!QFileInfo::exists(filepath))
     {
         emit infoS(-1);
@@ -97,7 +97,7 @@ int File::change()
 {
     emit infoS(0);
     QString filePath;
-    filePath = read.read();
+    filePath = r.read();
     if (!QFileInfo::exists(filePath))
     {
         emit infoS(-1);
@@ -114,7 +114,7 @@ int File::change()
     }
     emit infoS(3);
     QString userInput;
-    userInput = read.read();
+    userInput = r.read();
     out << userInput << "\n";
     file.close();
     emit infoS(1);
@@ -124,9 +124,15 @@ int File::change()
 int File::addfile()
 {
     emit infoS(0);
-    QString filepath = read.read();
+    QString filepath = r.read();
     filestats file(filepath);
     int n = pathlist.size();
+    if (!QFileInfo::exists(filepath))
+    {
+        emit infoS(-1);
+        emit updateS();
+        return 0;
+    }
     for (int i = 0; i < n;i++)
     {
         if (filepath == pathlist[i])
@@ -142,15 +148,38 @@ int File::addfile()
     emit updateS();
     return 1;
 }
-void File::removefile()
+int File::removefile()
 {
     emit infoS(0);
-    QString filepath = read.read();
+    QString filepath = r.read();
     filestats file(filepath);
+    if (!QFileInfo::exists(filepath))
+    {
+        emit infoS(-1);
+        emit updateS();
+        return 0;
+    }
+    int n = pathlist.size();
+    if (pathlist.isEmpty())
+    {
+        emit infoS(-1);
+        emit updateS();
+        return 0;
+    }
+    for (int i = 0; i < n;i++)
+    {
+        if (filepath != pathlist[i])
+        {
+            emit infoS(-1);
+            emit updateS();
+            return 0;
+        }
+    }
     fileinfo.removeOne(file);
     pathlist.removeOne(filepath);
     emit infoS(1);
     emit updateS();
+    return 1;
 }
 void File::checkSL()
 {
@@ -172,3 +201,4 @@ void File::listfiles()
     int n = pathlist.size();
     emit listfilesS(n,pathlist);
 }
+

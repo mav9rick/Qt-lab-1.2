@@ -27,8 +27,9 @@ signals:
     void updateSW();
     void runS();
     void userinputS(QString input);
+    void infS(int n);
 };
 
 
-
 #endif
+
