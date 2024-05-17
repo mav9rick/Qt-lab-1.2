@@ -8,6 +8,18 @@
 #include <QString>
 #include <QDir>
 #include <iostream>
+class reader: public QObject
+{
+    Q_OBJECT
+public:
+    reader();
+signals:
+    void input(QString);
+    void comS(int n);
+public slots:
+    void readcommand();
+    QString read();
+};
 class filestats:public QFileInfo
 {
 private:
@@ -27,13 +39,14 @@ public:
     int del();
     int change();
     int addfile();
-    void removefile();
+    int removefile();
     void listfiles();
     static File& Instance()
     {
         static File i;
         return i;
     }
+    reader r;
 private:
     QVector<QString> pathlist;
     QVector<filestats> fileinfo;
@@ -44,7 +57,9 @@ signals:
     void updateS();
     void fileinfoS(QString pathlist);
     void listfilesS(int n , QVector<QString> pathlist);
+    void infoS(int i);
 public slots:
     void checkSL();
 };
+
 #endif // FILE_H

@@ -1,7 +1,23 @@
 #include "file.h"
 
 using namespace std;
-const QString defpath = QDir::currentPath();
+reader::reader()
+{}
+void reader::readcommand()
+{
+    emit comS(5);
+    string s;
+    getline(cin,s);
+    QString df(s.c_str());
+    emit input(df);
+}
+QString reader::read()
+{
+    string s;
+    getline(cin,s);
+    QString df(s.c_str());
+    return df;
+}
 int filestats::check(QString newpath)
 {
     QFileInfo fileinfo(newpath);
@@ -25,131 +41,145 @@ filestats::filestats(QString path)
 }
 int File::create()
 {
-    cout << "Выберите где создать файл : " << endl
-         << "1 - Создать в стандартной директории." << endl
-         << "2 - Задать директорию" << endl;
-    int c = 0;
-    cin >> c;
-    if (c == 2)
-    {
-        cout << "Введите директорию в которой создать файл : " ;
-        QTextStream in1(stdin);
-        QString newpath;
-        in1 >> newpath;
-        QDir::setCurrent(newpath);
-    }
-    else
-    {
-        QDir::setCurrent(defpath);
-    }
-    cout << "Введите название файла : ";
-    QString userInput,name;
-    QTextStream in(stdin),in2(stdin);
-    in2 >> name;
+    emit infoS(4);
+    QString path = r.read();
+    QDir::setCurrent(path);
+    emit infoS(2);
+    QString userInput,name = r.read();
     QFile file(name + ".txt");
+    if (!QFileInfo::exists(path))
+    {
+        emit infoS(-1);
+        emit updateS();
+        return 0;
+    }
     QTextStream out2(&file);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        cout << "Ошибка при открытии файла на чтение." << endl;
+        emit infoS(-1);
+        emit updateS();
         return 0;
     }
-    cout << "Введите содержание файла : ";
-    userInput = in.readLine();
+    emit infoS(3);
+    userInput = r.read();
     out2 << userInput << "\n";
     file.close();
-    cout << "\n";
-    cout << "Файл создан успешно." << endl;
+    emit infoS(1);
     emit updateS();
     return 1;
 }
 int File::del()
 {
-    QTextStream in(stdin);
-    cout << "Введите путь к файлу : " ;
+    emit infoS(0);
     QString filepath;
-    in >> filepath;
+    filepath = r.read();
     if (!QFileInfo::exists(filepath))
     {
-        cout << "Файл не найден." << endl;
+        emit infoS(-1);
+        emit updateS();
         return 0;
     }
     QFile file(filepath);
     if (file.remove())
     {
-        cout << "Файл успешно удален." << endl;
+        emit infoS(1);
         emit updateS();
         return 1;
     }
     else
     {
-        cout << "Не удалось удалить файл." << endl;
+        emit infoS(-1);
         emit updateS();
         return 0;
     }
 }
 int File::change()
 {
-    QTextStream in(stdin),in1(stdin);
-    cout << "Введите путь к файлу : " ;
+    emit infoS(0);
     QString filePath;
-    in >> filePath;
+    filePath = r.read();
     if (!QFileInfo::exists(filePath))
     {
-        cout << "Файл не найден." << endl;
+        emit infoS(-1);
+        emit updateS();
         return 0;
     }
     QFile file(filePath);
     QTextStream out(&file);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
     {
-        cout << "Ошибка открытия файла для чтения и записи." << endl;
+        emit infoS(-1);
+        emit updateS();
         return 0;
     }
-    cout << "Введите содержимое файла : ";
+    emit infoS(3);
     QString userInput;
-    userInput = in1.readLine();
+    userInput = r.read();
     out << userInput << "\n";
     file.close();
-    cout << "Файл был успешно изменён." << endl;
+    emit infoS(1);
     emit updateS();
     return 1;
 }
 int File::addfile()
 {
-    cout << endl;
-    cout << "Введите путь к файлу , который необходимо добавить в список : " ;
-    QTextStream in(stdin);
-    QString filepath;
-    in >> filepath;
+    emit infoS(0);
+    QString filepath = r.read();
     filestats file(filepath);
     int n = pathlist.size();
+    if (!QFileInfo::exists(filepath))
+    {
+        emit infoS(-1);
+        emit updateS();
+        return 0;
+    }
     for (int i = 0; i < n;i++)
     {
         if (filepath == pathlist[i])
         {
-            cout << "Файл уже есть в списке" << endl;
+            emit infoS(-1);
             emit updateS();
             return 0;
         }
     }
     fileinfo.append(file);
     pathlist.append(filepath);
-    cout << "Файл добавлен в список" << endl;
+    emit infoS(1);
     emit updateS();
     return 1;
 }
-void File::removefile()
+int File::removefile()
 {
-    cout << endl;
-    cout << "Введите путь к файлу , который необходимо убрать из списка : " ;
-    QTextStream in(stdin);
-    QString filepath;
-    in >> filepath;
+    emit infoS(0);
+    QString filepath = r.read();
     filestats file(filepath);
+    if (!QFileInfo::exists(filepath))
+    {
+        emit infoS(-1);
+        emit updateS();
+        return 0;
+    }
+    int n = pathlist.size();
+    if (pathlist.isEmpty())
+    {
+        emit infoS(-1);
+        emit updateS();
+        return 0;
+    }
+    for (int i = 0; i < n;i++)
+    {
+        if (filepath != pathlist[i])
+        {
+            emit infoS(-1);
+            emit updateS();
+            return 0;
+        }
+    }
     fileinfo.removeOne(file);
     pathlist.removeOne(filepath);
-    cout << "Файл удалён из списка" << endl;
+    emit infoS(1);
     emit updateS();
+    return 1;
 }
 void File::checkSL()
 {
@@ -171,15 +201,4 @@ void File::listfiles()
     int n = pathlist.size();
     emit listfilesS(n,pathlist);
 }
-
-
-
-
-
-
-
-
-
-
-
 
