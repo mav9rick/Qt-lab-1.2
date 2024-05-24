@@ -35,11 +35,11 @@ class File:public QObject
     Q_OBJECT
 public:
     File(){};
-    int create();
-    int del();
-    int change();
-    int addfile();
-    int removefile();
+    int create(QString path , QString name);
+    int content(QString path , QString userInput);
+    int del(QString filepath);
+    int addfile(QString filepath);
+    int removefile(QString filepath);
     void listfiles();
     static File& Instance()
     {

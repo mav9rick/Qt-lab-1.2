@@ -32,6 +32,7 @@ int filestats::check(QString newpath)
     }
     return 0;
 }
+
 filestats::filestats(QString path)
 {
     QFileInfo file(path);
@@ -39,146 +40,90 @@ filestats::filestats(QString path)
     size = file.size();
     timemod = file.lastModified();
 }
-int File::create()
+int File::create(QString path, QString name)
 {
-    emit infoS(4);
-    QString path = r.read();
     QDir::setCurrent(path);
-    emit infoS(2);
-    QString userInput,name = r.read();
+    QString userInput;
     QFile file(name + ".txt");
     if (!QFileInfo::exists(path))
     {
-        emit infoS(-1);
-        emit updateS();
-        return 0;
+        return -1;
     }
     QTextStream out2(&file);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
     {
-        emit infoS(-1);
-        emit updateS();
-        return 0;
+        return -1;
     }
-    emit infoS(3);
-    userInput = r.read();
-    out2 << userInput << "\n";
-    file.close();
-    emit infoS(1);
-    emit updateS();
     return 1;
 }
-int File::del()
+int File::content(QString path, QString userInput)
 {
-    emit infoS(0);
-    QString filepath;
-    filepath = r.read();
+    QFile file(path);
+    QTextStream out2(&file);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+    {
+        return -1;
+    }
+    out2 << userInput << "\n";
+    file.close();
+    return 1;
+}
+int File::del(QString filepath)
+{
     if (!QFileInfo::exists(filepath))
     {
-        emit infoS(-1);
-        emit updateS();
-        return 0;
+        return -1;
     }
     QFile file(filepath);
     if (file.remove())
     {
-        emit infoS(1);
-        emit updateS();
         return 1;
     }
     else
     {
-        emit infoS(-1);
-        emit updateS();
-        return 0;
+        return -1;
     }
 }
-int File::change()
+int File::addfile(QString filepath)
 {
-    emit infoS(0);
-    QString filePath;
-    filePath = r.read();
-    if (!QFileInfo::exists(filePath))
-    {
-        emit infoS(-1);
-        emit updateS();
-        return 0;
-    }
-    QFile file(filePath);
-    QTextStream out(&file);
-    if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate))
-    {
-        emit infoS(-1);
-        emit updateS();
-        return 0;
-    }
-    emit infoS(3);
-    QString userInput;
-    userInput = r.read();
-    out << userInput << "\n";
-    file.close();
-    emit infoS(1);
-    emit updateS();
-    return 1;
-}
-int File::addfile()
-{
-    emit infoS(0);
-    QString filepath = r.read();
     filestats file(filepath);
     int n = pathlist.size();
     if (!QFileInfo::exists(filepath))
     {
-        emit infoS(-1);
-        emit updateS();
-        return 0;
+        return -1;
     }
     for (int i = 0; i < n;i++)
     {
         if (filepath == pathlist[i])
         {
-            emit infoS(-1);
-            emit updateS();
-            return 0;
+            return -1;
         }
     }
     fileinfo.append(file);
     pathlist.append(filepath);
-    emit infoS(1);
-    emit updateS();
     return 1;
 }
-int File::removefile()
+int File::removefile(QString filepath)
 {
-    emit infoS(0);
-    QString filepath = r.read();
     filestats file(filepath);
     if (!QFileInfo::exists(filepath))
     {
-        emit infoS(-1);
-        emit updateS();
-        return 0;
+        return -1;
     }
     int n = pathlist.size();
     if (pathlist.isEmpty())
     {
-        emit infoS(-1);
-        emit updateS();
-        return 0;
+        return -1;
     }
     for (int i = 0; i < n;i++)
     {
         if (filepath != pathlist[i])
         {
-            emit infoS(-1);
-            emit updateS();
-            return 0;
+            return -1;
         }
     }
     fileinfo.removeOne(file);
     pathlist.removeOne(filepath);
-    emit infoS(1);
-    emit updateS();
     return 1;
 }
 void File::checkSL()

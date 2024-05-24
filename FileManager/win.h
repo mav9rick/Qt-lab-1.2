@@ -14,6 +14,12 @@ class win:public QCoreApplication
     Q_OBJECT
 public:
     win(int argc, char*argv[]);
+    void createFile();
+    void FileContent(QString path);
+    void delFile();
+    void changeFile();
+    void addFile();
+    void removeFile();
 protected:
     void starttimer();
     void stoptimer();

@@ -12,7 +12,7 @@ logger::logger()
     commands["/exit"] = &logger::exitS;
     commands["/addfile"] = &logger::addfileS;
     commands["/removefile"] = &logger::removefileS;
-    commands["/list"]=&logger::listS;
+    commands["/list"] = &logger::listS;
 }
 void logger::displayhelp()
 {
@@ -90,24 +90,31 @@ void logger::info(int c)
     {
     case -1:
         out << "ОШИБКА" << "\n";
+        out.flush();
         break;
     case 0:
         out << "Введите путь к файлу : " ;
+        out.flush();
         break;
     case 1:
         out << "Операция выполнена успешно" << "\n";
+        out.flush();
         break;
     case 2:
         out << "Введите название файла : ";
+        out.flush();
         break;
     case 3:
         out << "Введите содержимое файла : ";
+        out.flush();
         break;
     case 4:
         out << "Введите директорию где создать файл : ";
+        out.flush();
         break;
     case 5:
         out << "Введите команду: " ;
+        out.flush();
         break;
     }
 }
