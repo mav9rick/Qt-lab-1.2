@@ -16,19 +16,19 @@ logger::logger()
 }
 void logger::displayhelp()
 {
-    cout << "Доступные команды:" <<  endl
-         << "~ Каждая команда начинается с / ~" << endl
-         << "/help - отобразить список доступных команд" <<  endl
-         << "/list - список файлов" <<  endl
-         << "/createfile - создать файл" <<  endl
-         << "/deletefile - удалить файл" <<  endl
-         << "/changefile - изменить файл" <<  endl
-         << "/addfile - добавить файл в список контроля" <<  endl
-         << "/removefile - удалить файл из списка контроля" <<  endl
-         << "/start - запуск процесса проверки файла" <<  endl
-         << "/stop - остановка процесса проверки файла" <<  endl
-         << "/exit - завершить программу" <<  endl
-         << "(Путь к файлу указывается по типу : C:/Директория/Ваш_Файл.txt)" << endl;
+    cout << "Commands:" <<  endl
+         << "~ Every command starts with / ~" << endl
+         << "/help - list of all commands" <<  endl
+         << "/list - list of files" <<  endl
+         << "/createfile - create file" <<  endl
+         << "/deletefile - delete file" <<  endl
+         << "/changefile - change file" <<  endl
+         << "/addfile - add file to watchlist" <<  endl
+         << "/removefile - remove file from watchlist" <<  endl
+         << "/start - start file monitoring process" <<  endl
+         << "/stop - stop file monitoring process" <<  endl
+         << "/exit - exit the program" <<  endl
+         << "(File path should be specified as: C:/Directory/Your_File.txt)" << endl;
     emit readS();
 }
 void logger::fileinfo(int size, QString name , QString lastmod, bool exist)
@@ -36,9 +36,9 @@ void logger::fileinfo(int size, QString name , QString lastmod, bool exist)
     QTextStream out(stdout);
     out << "\n";
     out << "+----------------------------------------------------+" << "\n"
-        << "|Название|Размер|Существует|Дата последнего изменения|" << "\n"
+        << "|Name|Size|Exists|Last Modified Date|" << "\n"
         << "+----------------------------------------------------+" << "\n"
-        << "| " << name << " | " << QString::number(size) << " | "<< (exist ? QString("Да") : QString("Нет")) << " | " << lastmod << " |" << "\n"
+        << "| " << name << " | " << QString::number(size) << " | "<< (exist ? QString("Yes") : QString("No")) << " | " << lastmod << " |" << "\n"
         << "+----------------------------------------------------+" << "\n";
     out.flush();
 }
@@ -51,35 +51,35 @@ void logger::runcommand(QString input)
     }
     else
     {
-        cout << "Неизвестная команда." << endl;
+        cout << "Unknown command." << endl;
         emit readS();
     }
 }
-void logger::list(int n,QVector<QString> pathlist)
+void logger::list(int n, QVector<QString> pathlist)
 {
     QTextStream out(stdout);
     out << "+----------------------------------------------------+" << "\n"
-         << "|Название|Размер|Существует|Дата последнего изменения|" << "\n"
-         << "+----------------------------------------------------+" << "\n";
+        << "|Name|Size|Exists|Last Modified Date|" << "\n"
+        << "+----------------------------------------------------+" << "\n";
     if (n != 0)
     {
-        for (int i = 0; i < n ;i++)
+        for (int i = 0; i < n; i++)
         {
             QString path = pathlist[i];
             QFileInfo fileinfo(path);
             QDateTime lasttimemod = fileinfo.lastModified();
-            QString name = fileinfo.fileName(),lastmod = lasttimemod.toString();
+            QString name = fileinfo.fileName(), lastmod = lasttimemod.toString();
             bool exist = fileinfo.exists();
             int size = fileinfo.size();
-            out << "|" << name << "|" << QString::number(size) << "|"<< (exist ? QString("Да") : QString("Нет")) << "|" << lastmod << "|" << "\n"
+            out << "|" << name << "|" << QString::number(size) << "|"<< (exist ? QString("Yes") : QString("No")) << "|" << lastmod << "|" << "\n"
                 << "+----------------------------------------------------+" << "\n";
         }
         emit readS();
     }
     else
     {
-        out << " ~Список файлов пуст~ " << "\n"
-             << "+----------------------------------------------------+" << "\n";
+        out << " ~File list is empty~ " << "\n"
+            << "+----------------------------------------------------+" << "\n";
         emit readS();
     }
 }
@@ -89,31 +89,31 @@ void logger::info(int c)
     switch(c)
     {
     case -1:
-        out << "ОШИБКА" << "\n";
+        out << "ERROR" << "\n";
         out.flush();
         break;
     case 0:
-        out << "Введите путь к файлу : " ;
+        out << "Enter the file path: ";
         out.flush();
         break;
     case 1:
-        out << "Операция выполнена успешно" << "\n";
+        out << "Operation completed successfully" << "\n";
         out.flush();
         break;
     case 2:
-        out << "Введите название файла : ";
+        out << "Enter the file name: ";
         out.flush();
         break;
     case 3:
-        out << "Введите содержимое файла : ";
+        out << "Enter the file content: ";
         out.flush();
         break;
     case 4:
-        out << "Введите директорию где создать файл : ";
+        out << "Enter the directory to create the file: ";
         out.flush();
         break;
     case 5:
-        out << "Введите команду: " ;
+        out << "Enter a command: ";
         out.flush();
         break;
     }

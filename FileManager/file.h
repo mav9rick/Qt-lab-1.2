@@ -8,6 +8,7 @@
 #include <QString>
 #include <QDir>
 #include <iostream>
+#include <QDateTime>
 class reader: public QObject
 {
     Q_OBJECT

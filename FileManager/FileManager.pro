@@ -11,7 +11,6 @@ CONFIG += c++17 cmdline
 SOURCES += \
     logger.cpp \
     main.cpp \
-    main.cpp \
     file.cpp \
     win.cpp
 

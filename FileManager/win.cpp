@@ -27,10 +27,10 @@ win::win(int argc, char*argv[]):QCoreApplication(argc,argv)
 
     connect(&myfile.r,&reader::comS,&loger,&logger::info);
 
-    connect(newtimer,&QTimer::timeout,&myfile,&File::checkSL);
+    connect(&newtimer,&QTimer::timeout,&myfile,&File::checkSL);
 
-    cout << "~Консольное приложение для отслеживания изменений файлов~" << endl
-         << "| Вывести список доступных комманд - /help |" << endl;
+    cout << "~Console application for monitoring file changes~" << endl
+         << "| Display list of available commands - /help |" << endl;
     myfile.r.moveToThread(&thread);
     thread.start();
 }
@@ -41,13 +41,13 @@ void win::execute()
 }
 void win::starttimer()
 {
-    newtimer->start(3000);
+    newtimer.start(3000);
     emit infS(1);
     emit runS();
 }
 void win::stoptimer()
 {
-    newtimer->stop();
+    newtimer.stop();
     emit infS(1);
     emit runS();
 }

@@ -28,7 +28,7 @@ private:
     File &myfile = File::Instance();
     logger &loger = logger::Instance();
     QThread thread;
-    QTimer *newtimer = new QTimer(this);
+    QTimer newtimer;
 signals:
     void updateSW();
     void runS();
